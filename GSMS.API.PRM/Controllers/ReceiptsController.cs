@@ -6,11 +6,13 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using GSMS.API.PRM.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace GSMS.API.PRM.Controllers
 {
     [Route("api/receipts")]
     [ApiController]
+    [Authorize]
     public class ReceiptsController : ControllerBase
     {
         private readonly GsmsContext _context;
@@ -77,6 +79,18 @@ namespace GSMS.API.PRM.Controllers
         [HttpPost]
         public async Task<ActionResult<Receipt>> PostReceipt(Receipt receipt)
         {
+            receipt.Id = Guid.NewGuid().ToString();
+            receipt.CreatedDate = DateTime.Now;
+            receipt.IsDeleted = false;
+
+            if (receipt.ReceiptDetails != null && receipt.ReceiptDetails.Any())
+            {
+                foreach (ReceiptDetail receiptDetail in receipt.ReceiptDetails)
+                {
+                    receiptDetail.Id = Guid.NewGuid().ToString();
+                    receiptDetail.CreatedDate = DateTime.Now;
+                }
+            }
             _context.Receipts.Add(receipt);
             try
             {
@@ -107,7 +121,8 @@ namespace GSMS.API.PRM.Controllers
                 return NotFound();
             }
 
-            _context.Receipts.Remove(receipt);
+            receipt.IsDeleted = true;
+            _context.Receipts.Update(receipt);
             await _context.SaveChangesAsync();
 
             return NoContent();

@@ -6,11 +6,13 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using GSMS.API.PRM.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace GSMS.API.PRM.Controllers
 {
     [Route("api/receipt-details")]
     [ApiController]
+    [Authorize]
     public class ReceiptDetailsController : ControllerBase
     {
         private readonly GsmsContext _context;
@@ -77,6 +79,9 @@ namespace GSMS.API.PRM.Controllers
         [HttpPost]
         public async Task<ActionResult<ReceiptDetail>> PostReceiptDetail(ReceiptDetail receiptDetail)
         {
+            receiptDetail.Id = Guid.NewGuid().ToString();
+            receiptDetail.CreatedDate = DateTime.Now;
+
             _context.ReceiptDetails.Add(receiptDetail);
             try
             {

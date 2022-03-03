@@ -6,11 +6,13 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using GSMS.API.PRM.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace GSMS.API.PRM.Controllers
 {
     [Route("api/import-orders")]
     [ApiController]
+    [Authorize]
     public class ImportOrdersController : ControllerBase
     {
         private readonly GsmsContext _context;
@@ -77,6 +79,18 @@ namespace GSMS.API.PRM.Controllers
         [HttpPost]
         public async Task<ActionResult<ImportOrder>> PostImportOrder(ImportOrder importOrder)
         {
+            importOrder.Id = Guid.NewGuid().ToString();
+            importOrder.CreatedDate = DateTime.Now;
+            importOrder.IsDeleted = false;
+
+            if (importOrder.ImportOrderDetails != null && importOrder.ImportOrderDetails.Any())
+            {
+                foreach (ImportOrderDetail importOrderDetail in importOrder.ImportOrderDetails)
+                {
+                    importOrderDetail.Id = Guid.NewGuid().ToString();
+                    importOrderDetail.IsDeleted = false;
+                }
+            }
             _context.ImportOrders.Add(importOrder);
             try
             {
@@ -106,10 +120,9 @@ namespace GSMS.API.PRM.Controllers
             {
                 return NotFound();
             }
-
-            _context.ImportOrders.Remove(importOrder);
+            importOrder.IsDeleted = true;
+            _context.ImportOrders.Update(importOrder);
             await _context.SaveChangesAsync();
-
             return NoContent();
         }
 
