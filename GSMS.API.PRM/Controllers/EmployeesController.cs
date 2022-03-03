@@ -73,7 +73,6 @@ namespace GSMS.API.PRM.Controllers
 
         // GET: api/Employees
         [HttpGet]
-        [Authorize(Roles = "ADMIN")]
         public async Task<ActionResult<IEnumerable<Employee>>> GetEmployees()
         {
             return await _context.Employees.ToListAsync();
