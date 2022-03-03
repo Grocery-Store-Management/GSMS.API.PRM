@@ -6,11 +6,13 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using GSMS.API.PRM.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace GSMS.API.PRM.Controllers
 {
     [Route("api/products")]
     [ApiController]
+    [Authorize]
     public class ProductsController : ControllerBase
     {
         private readonly GsmsContext _context;
@@ -77,6 +79,9 @@ namespace GSMS.API.PRM.Controllers
         [HttpPost]
         public async Task<ActionResult<Product>> PostProduct(Product product)
         {
+            product.Id = Guid.NewGuid().ToString();
+            product.IsDeleted = false;
+
             _context.Products.Add(product);
             try
             {
@@ -107,7 +112,8 @@ namespace GSMS.API.PRM.Controllers
                 return NotFound();
             }
 
-            _context.Products.Remove(product);
+            product.IsDeleted = true;
+            _context.Products.Update(product);
             await _context.SaveChangesAsync();
 
             return NoContent();

@@ -6,11 +6,13 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using GSMS.API.PRM.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace GSMS.API.PRM.Controllers
 {
     [Route("api/stores")]
     [ApiController]
+    [Authorize]
     public class StoresController : ControllerBase
     {
         private readonly GsmsContext _context;
@@ -110,7 +112,9 @@ namespace GSMS.API.PRM.Controllers
                 return NotFound();
             }
 
-            _context.Stores.Remove(store);
+            //_context.Stores.Remove(store);
+            store.IsDeleted = 0;
+            _context.Stores.Update(store);
             await _context.SaveChangesAsync();
 
             return NoContent();

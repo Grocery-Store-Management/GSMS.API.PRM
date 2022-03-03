@@ -18,6 +18,7 @@ namespace GSMS.API.PRM.Controllers
 {
     [Route("api/employees")]
     [ApiController]
+    [Authorize]
     public class EmployeesController : ControllerBase
     {
         private readonly GsmsContext _context;
@@ -162,7 +163,9 @@ namespace GSMS.API.PRM.Controllers
                 return NotFound();
             }
 
-            _context.Employees.Remove(employee);
+            //_context.Employees.Remove(employee);
+            employee.IsDeleted = true;
+            _context.Employees.Update(employee);
             await _context.SaveChangesAsync();
 
             return NoContent();

@@ -6,11 +6,13 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using GSMS.API.PRM.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace GSMS.API.PRM.Controllers
 {
     [Route("api/categories")]
     [ApiController]
+    [Authorize]
     public class CategoriesController : ControllerBase
     {
         private readonly GsmsContext _context;
@@ -77,6 +79,9 @@ namespace GSMS.API.PRM.Controllers
         [HttpPost]
         public async Task<ActionResult<Category>> PostCategory(Category category)
         {
+            category.Id = Guid.NewGuid().ToString();
+            category.IsDeleted = false;
+
             _context.Categories.Add(category);
             try
             {
@@ -107,7 +112,9 @@ namespace GSMS.API.PRM.Controllers
                 return NotFound();
             }
 
-            _context.Categories.Remove(category);
+            //_context.Categories.Remove(category);
+            category.IsDeleted = true;
+            _context.Categories.Update(category);
             await _context.SaveChangesAsync();
 
             return NoContent();
