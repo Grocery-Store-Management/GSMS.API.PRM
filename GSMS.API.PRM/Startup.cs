@@ -34,14 +34,26 @@ namespace GSMS.API.PRM
 
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "GSMS.API.PRM", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo
+                { 
+                    Title = "GSMS.API.PRM", 
+                    Version = "v1" 
+                });
+            });
+
+            // API Calling Settings
+            services.AddCors(c =>
+            {
+                c.AddPolicy("AllowOrigin", options => options.AllowAnyOrigin());
+                c.AddPolicy("AllowHeader", options => options.AllowAnyHeader());
+                c.AddPolicy("AllowMethod", options => options.AllowAnyMethod());
             });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
+            if (env.IsDevelopment() || env.IsProduction())
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
@@ -53,6 +65,13 @@ namespace GSMS.API.PRM
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseCors(options =>
+            {
+                options.AllowAnyHeader();
+                options.AllowAnyMethod();
+                options.AllowAnyOrigin();
+            });
 
             app.UseEndpoints(endpoints =>
             {
