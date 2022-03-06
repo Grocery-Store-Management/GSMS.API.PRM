@@ -24,8 +24,12 @@ namespace GSMS.API.PRM.Controllers
 
         // GET: api/ImportOrderDetails
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ImportOrderDetail>>> GetImportOrderDetails()
+        public async Task<ActionResult<IEnumerable<ImportOrderDetail>>> GetImportOrderDetails([FromQuery] string orderId)
         {
+            if (!string.IsNullOrEmpty(orderId))
+            {
+                return await _context.ImportOrderDetails.Where(io => io.OrderId.Equals(orderId)).ToListAsync();
+            }
             return await _context.ImportOrderDetails.ToListAsync();
         }
 
