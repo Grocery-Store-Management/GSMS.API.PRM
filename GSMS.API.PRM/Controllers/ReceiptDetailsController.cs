@@ -24,8 +24,12 @@ namespace GSMS.API.PRM.Controllers
 
         // GET: api/ReceiptDetails
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ReceiptDetail>>> GetReceiptDetails()
+        public async Task<ActionResult<IEnumerable<ReceiptDetail>>> GetReceiptDetails([FromQuery] string receiptId)
         {
+            if (!string.IsNullOrEmpty(receiptId))
+            {
+                return await _context.ReceiptDetails.Where(rd => rd.ReceiptId.Equals(receiptId)).ToListAsync();
+            }
             return await _context.ReceiptDetails.ToListAsync();
         }
 
