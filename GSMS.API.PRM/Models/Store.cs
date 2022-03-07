@@ -17,7 +17,7 @@ namespace GSMS.API.PRM.Models
         public string Id { get; set; }
         public string Name { get; set; }
         public DateTime CreatedDate { get; set; }
-        public int IsDeleted { get; set; }
+        public bool IsDeleted { get; set; }
 
         public virtual ICollection<Employee> Employees { get; set; }
         public virtual ICollection<ImportOrder> ImportOrders { get; set; }

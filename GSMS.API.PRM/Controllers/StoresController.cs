@@ -113,7 +113,7 @@ namespace GSMS.API.PRM.Controllers
             }
 
             //_context.Stores.Remove(store);
-            store.IsDeleted = 0;
+            store.IsDeleted = false;
             _context.Stores.Update(store);
             await _context.SaveChangesAsync();
 
