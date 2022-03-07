@@ -28,7 +28,10 @@ namespace GSMS.API.PRM.Controllers
         {
             if (!string.IsNullOrEmpty(orderId))
             {
-                return await _context.ImportOrderDetails.Where(io => io.OrderId.Equals(orderId)).ToListAsync();
+                return await _context.ImportOrderDetails
+                    .Where(io => io.OrderId.Equals(orderId))
+                    .Include(io => io.Product)
+                    .ToListAsync();
             }
             return await _context.ImportOrderDetails.ToListAsync();
         }
