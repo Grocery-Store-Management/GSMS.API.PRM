@@ -26,7 +26,9 @@ namespace GSMS.API.PRM.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ImportOrder>>> GetImportOrders()
         {
-            return await _context.ImportOrders.ToListAsync();
+            return await _context.ImportOrders
+                .Include(io => io.Store)
+                .ToListAsync();
         }
 
         // GET: api/ImportOrders/5
