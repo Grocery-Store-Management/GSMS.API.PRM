@@ -12,7 +12,7 @@ namespace GSMS.API.PRM.Models
         public string ProductId { get; set; }
         public int Quantity { get; set; }
         public DateTime CreatedDate { get; set; }
-        public decimal? Price { get; set; }
+        public decimal Price { get; set; }
         public string Name { get; set; }
 
         public virtual Product Product { get; set; }
