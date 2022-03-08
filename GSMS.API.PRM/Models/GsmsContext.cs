@@ -31,7 +31,8 @@ namespace GSMS.API.PRM.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer();
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+                optionsBuilder.UseSqlServer("Server=tcp:gsms-prn.database.windows.net,1433;Initial Catalog=DB_GSMS_PRN;Persist Security Info=False;User ID=gsmsprn;Password=G$M$123456;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
             }
         }
 
@@ -137,6 +138,8 @@ namespace GSMS.API.PRM.Models
                     .IsRequired()
                     .HasMaxLength(40);
 
+                entity.Property(e => e.Price).HasColumnType("money");
+
                 entity.Property(e => e.ProductId)
                     .IsRequired()
                     .HasMaxLength(40);
@@ -225,6 +228,10 @@ namespace GSMS.API.PRM.Models
                 entity.Property(e => e.Id).HasMaxLength(40);
 
                 entity.Property(e => e.CreatedDate).HasColumnType("datetime");
+
+                entity.Property(e => e.Name).HasMaxLength(50);
+
+                entity.Property(e => e.Price).HasColumnType("money");
 
                 entity.Property(e => e.ProductId)
                     .IsRequired()
