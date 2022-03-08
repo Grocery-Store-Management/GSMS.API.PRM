@@ -28,6 +28,7 @@ namespace GSMS.API.PRM.Controllers
         {
             return await _context.ImportOrders
                 .Include(io => io.Store)
+                .Where(io => !io.IsDeleted)
                 .ToListAsync();
         }
 
