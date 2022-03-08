@@ -147,7 +147,7 @@ namespace GSMS.API.PRM.Models
                     .WithMany(p => p.ImportOrderDetails)
                     .HasForeignKey(d => d.OrderId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_ImportOrderDetails_ImportOrders");
+                    .HasConstraintName("FK_ImportOrderDetail_ImportOrder");
 
                 entity.HasOne(d => d.Product)
                     .WithMany(p => p.ImportOrderDetails)
@@ -228,7 +228,9 @@ namespace GSMS.API.PRM.Models
 
                 entity.Property(e => e.CreatedDate).HasColumnType("datetime");
 
-                entity.Property(e => e.Name).HasMaxLength(50);
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasMaxLength(50);
 
                 entity.Property(e => e.Price).HasColumnType("money");
 
