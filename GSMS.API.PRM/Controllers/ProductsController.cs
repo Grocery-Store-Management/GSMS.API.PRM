@@ -26,7 +26,10 @@ namespace GSMS.API.PRM.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Product>>> GetProducts()
         {
-            return await _context.Products.ToListAsync();
+            return await _context.Products
+                .Include(p => p.Category)
+                .Where(p => !p.IsDeleted)
+                .ToListAsync();
         }
 
         // GET: api/Products/5
